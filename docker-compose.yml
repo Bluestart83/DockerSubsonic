@@ -1,0 +1,28 @@
+services:
+  subsonic:
+    #image: hydria/subsonic:6.1.6
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: subsonic
+    restart: unless-stopped
+    ports:
+      - "4044:4040" # Airsonic-Advanced web interface
+    environment:
+      #PUID: 1000                    # User ID (adjust as needed)
+      #PGID: 1000                    # Group ID (adjust as needed)
+      TZ: Europe/Paris              # Timezone (adjust as needed)
+      CONTEXT_PATH: ""              # Optional, for reverse proxy setups
+      JAVA_OPTS: "-Xmx256m"         # Optional, adjust Java memory settings
+    volumes:
+      - ./subsonic_data/config:/var/subsonic            # Configuration files
+      - /mnt/music/ZIC:/var/music              # Music files
+   #   - /mnt/music/ZIC/OST:/music-OST
+#      - ./podcasts:/podcasts        # Podcasts
+      - ./subsonic_data/playlists:/playlists      # Playlists
+    networks:
+      - airsonic_net
+
+networks:
+  airsonic_net:
+    driver: bridge
